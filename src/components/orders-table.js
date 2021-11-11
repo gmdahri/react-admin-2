@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
 import { Link as RouterLink } from 'react-router-dom';
-import { format } from 'date-fns';
+// import { format } from 'date-fns';
 import {
-  Box,
+  // Box,
   Chip,
   Link,
   Table,
@@ -10,11 +10,11 @@ import {
   TableCell,
   TableHead,
   TableRow,
-  Typography
+  // Typography
 } from '@material-ui/core';
 import { Scrollbar } from './scrollbar';
 
-const statusVariants = [
+const statusVariant = [
   {
     label: 'Placed',
     value: 'placed'
@@ -35,6 +35,20 @@ const statusVariants = [
 
 export const OrdersTable = (props) => {
   const { orders } = props;
+  console.log('data', orders);
+
+  // const renderTable = () => {
+  //   return orders.map(user => {
+  //     return (
+  //       <tr>
+  //         <td>{user.banquetName}</td>
+  //         <td>{user.banquetAddress}</td>
+  //         <td>{user.banquetPrice}</td>
+  //         <td>{user.banquetImage}</td>
+  //       </tr>
+  //     )
+  //   })
+  // }
 
   return (
     <div>
@@ -43,13 +57,19 @@ export const OrdersTable = (props) => {
           <TableHead>
             <TableRow>
               <TableCell>
-                Order
+                Number
               </TableCell>
               <TableCell>
-                Date
+                BanquetName
               </TableCell>
               <TableCell>
-                Customer
+                BanquetPrice
+              </TableCell>
+              <TableCell>
+                banquetAddress
+              </TableCell>
+              <TableCell>
+                banquetImage
               </TableCell>
               <TableCell>
                 Status
@@ -57,13 +77,11 @@ export const OrdersTable = (props) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {orders.map((order) => {
-              const statusVariant = statusVariants.find(
-                (variant) => variant.value === order.status
-              );
+            {orders ? orders.map((user, index) => {
+              if (user.banquetName === 'hi') console.log('hi');
 
               return (
-                <TableRow key={order.id}>
+                <TableRow>
                   <TableCell>
                     <Link
                       color="inherit"
@@ -72,10 +90,11 @@ export const OrdersTable = (props) => {
                       underline="none"
                       variant="subtitle2"
                     >
-                      {`#${order.id}`}
+                      {/* {`#${key}`} */}
+                      {index}
                     </Link>
                   </TableCell>
-                  <TableCell>
+                  {/* <TableCell>
                     <Box>
                       <Typography
                         color="inherit"
@@ -90,9 +109,19 @@ export const OrdersTable = (props) => {
                         {format(new Date(order.createdAt), 'HH:mm')}
                       </Typography>
                     </Box>
+                  </TableCell> */}
+
+                  <TableCell>
+                    {user.banquetName}
                   </TableCell>
                   <TableCell>
-                    {`${order.customer.firstName} ${order.customer.lastName}`}
+                    {user.banquetAddress}
+                  </TableCell>
+                  <TableCell>
+                    {user.banquetPrice}
+                  </TableCell>
+                  <TableCell>
+                    {user.banquetImage}
                   </TableCell>
                   <TableCell>
                     <Chip
@@ -102,9 +131,33 @@ export const OrdersTable = (props) => {
                   </TableCell>
                 </TableRow>
               );
-            })}
+            }) : null}
           </TableBody>
         </Table>
+        {/* <table id="users">
+          <thead>
+            <tr>
+              <th>Banquet Name</th>
+              <th>Banquet Address</th>
+              <th>Banquet Price</th>
+              <th>Banquet Image</th>
+            </tr>
+          </thead>
+          {/* <tbody>{renderTable()}</tbody> }
+          <tbody>
+            {orders ? orders.map((user) => {
+              if (user.banquetName === 'hi') console.log('hi');
+              return (
+                <tr>
+                  <td>{user.banquetName}</td>
+                  <td>{user.banquetAddress}</td>
+                  <td>{user.banquetPrice}</td>
+                  <td>{user.banquetImage}</td>
+                </tr>
+              );
+            }) : null }
+          </tbody>
+        </table> */}
       </Scrollbar>
     </div>
   );

@@ -1,11 +1,24 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { Box, Button, Card, Container, Divider, TablePagination, Typography } from '@material-ui/core';
+import axios from 'axios';
 import { OrdersFilter } from '../components/orders/orders-filter';
 import { OrdersTable } from '../components/orders-table';
 import { orders } from '../__mocks__/orders';
 
 export const Orders = () => {
+  const [data, setData] = useState('');
+  useEffect(() => {
+    axios.get('http://localhost:8080/banquet/allBanquet')
+      .then((response) => {
+        setData(response);
+        console.log('success', response);
+      })
+      .catch((error) => {
+        console.log('error', error);
+      });
+  }, []);
+  // console.log('orders', data);
   const [mode, setMode] = useState('table');
   const [query, setQuery] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -33,7 +46,7 @@ export const Orders = () => {
   return (
     <>
       <Helmet>
-        <title>Orders | Carpatin Dashboard</title>
+        <title>Bookings</title>
       </Helmet>
       <Box
         sx={{
@@ -73,7 +86,7 @@ export const Orders = () => {
               query={query}
             />
             <Divider />
-            <OrdersTable orders={orders} />
+            <OrdersTable orders={data.data} />
             <Divider />
             <TablePagination
               rowsPerPageOptions={[5, 10, 25]}

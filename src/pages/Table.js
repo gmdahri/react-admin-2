@@ -16,32 +16,36 @@ import {
   Typography
 } from '@material-ui/core';
 
-const companySizeOptions = ['1-10', '11-30', '31-50', '50+'];
+// const companySizeOptions = ['1-10', '11-30', '31-50', '50+'];
 
 export const Table = () => {
   const formik = useFormik({
     initialValues: {
-      companyName: 'ACME Corp LLC.',
-      companySize: '1-10',
-      banquetAddress: '',
       banquetName: '',
+      banquetAddress: '',
       banquetPrice: '',
-      submit: null
+      banquetImage: ''
+
     },
     validationSchema: Yup.object().shape({
-      companyName: Yup.string().max(255).required('Company name is required'),
-      companySize: Yup
-        .string()
-        .max(255)
-        .oneOf(companySizeOptions)
-        .required('Company size is required'),
+
       // email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
       banquetAddress: Yup.string().max(255).required('Banquet Address is required'),
       banquetName: Yup.string().max(255).required('Full Name is required'),
-      banquetPrice: Yup.string().max(255).required('Job name is required')
+      banquetPrice: Yup.number().max(255).required('Banquet Price is required'),
+      // banquetImage: Yup.array().min(1, 'Select 1 Image')
     }),
     onSubmit: async (values, helpers) => {
-      axios.post('http://localhost:8080/banquet/addbanquet', values)
+      const val = JSON.stringify(values);
+      console.log(val);
+
+      axios.post('http://localhost:8080/banquet/addbanquet', values, {
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          // Authorization: 'Bearer ' + token // if you use token
+        }
+      })
         .then((response) => {
           console.log('success', response);
         })
@@ -59,6 +63,8 @@ export const Table = () => {
       }
     }
   });
+
+  const { setFieldValue } = formik;
 
   return (
     <>
@@ -90,8 +96,8 @@ export const Table = () => {
               xs={12}
             >
               <Typography
-                color="textPrimary"
                 variant="h6"
+                color="textPrimary"
               >
                 Banquet Details
               </Typography>
@@ -105,7 +111,7 @@ export const Table = () => {
                 variant="outlined"
                 sx={{ p: 3 }}
               >
-                <form onSubmit={formik.handleSubmit} enctyp="multipart/form-data">
+                <form onSubmit={formik.handleSubmit}>
                   <div>
                     {/* <Box
                       sx={{
@@ -223,7 +229,10 @@ export const Table = () => {
                         <Input
                           type="file"
                           name="banquetImage"
-                        // onChange={handleChange('file')}
+                          onChange={(event) => {
+                            setFieldValue('banquetImage', event.currentTarget.files[0]);
+                          }}
+                        // onChange={formik.handleChange}
                         />
                       </Grid>
                       <Grid
